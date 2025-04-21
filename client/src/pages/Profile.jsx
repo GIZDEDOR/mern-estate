@@ -1,19 +1,20 @@
 import { useSelector } from "react-redux";
 import { useRef, useState, useEffect } from "react";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import { updateUserStart, updateUserFailure, updateUserSuccess } from "../redux/user/userSlice";
 import { app } from "../firebase";
+import { useDispatch } from "react-redux";
 
 
 export default function Profile() {
   const fileRef = useRef(null);
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, loading, error } = useSelector((state) => state.user);
   const [file, setFile] = useState(undefined);
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
-  console.log(formData);
-  console.log(filePerc);
-  console.log(fileUploadError);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if(file) {
@@ -32,24 +33,51 @@ export default function Profile() {
       (snapshot) => {
         const progress = 
         (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      setFilePerc(Math.round(progress));
+        setFilePerc(Math.round(progress));
       },
       (error)=>{
         setFileUploadError(true);
       },
       () => {
-        getDownloadURL(uploadTask.snapshot.ref).then
-        ((downloadUrl) => 
-          setFormData({ ...formData, avatar: downloadUrl })
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => 
+          setFormData((prev) => ({ ...prev, avatar: downloadUrl }))
         );
       }
     );
   };
 
+  const handleChange = (e) => {
+    setFormData({...formData, [e.target.id]: e.target.value});
+  };
+
+  const handleSubmit = async (e) => { 
+    e.preventDefault(); 
+    try {
+      dispatch(updateUserStart()); 
+      const res = await fetch(`/api/user/update/${currentUser._id}`,{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if(!res.ok) {
+        const errorData = await res.json();
+        dispatch(updateUserFailure(errorData.message));
+        return;
+      }
+      const data = await res.json();
+      dispatch(updateUserSuccess(data));
+      setUpdateSuccess(true);
+    } catch (error) { 
+      dispatch(updateUserFailure(error.message)); 
+    }
+  };
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className='text-3xl font-semibold text-center my-7'>Профиль</h1>
-      <form className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input 
           onChange={(e)=>setFile(e.target.files[0])} 
           type="file" 
@@ -69,20 +97,43 @@ export default function Profile() {
           ) : filePerc > 0 && filePerc < 100 ? (
             <span className="text-slate-700">{`Загрузка${filePerc}%`}</span>
           ) : filePerc === 100 ? (
-            <span className="text-green-700">Успешно загружено!</span>
+            <span className="text-green-700">Изображение успешно загружено!</span>
           ) : (
             ''
         )}
         </p>
-        <input type="text" placeholder='Имя' id="username" className='border p-3 rounded-lg' />
-        <input type="text" placeholder='Почта' id="email" className='border p-3 rounded-lg' />
-        <input type="text" placeholder='Пароль' id="password" className='border p-3 rounded-lg' />
-        <button className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80">Обновить</button>
+        <input 
+          type="text" 
+          placeholder='Имя' 
+          defaultValue={currentUser.username} 
+          id="username" 
+          className='border p-3 rounded-lg'
+          onChange={handleChange} 
+        />
+        <input 
+          type="text" 
+          placeholder='Почта' 
+          defaultValue={currentUser.email} 
+          id="email" 
+          className='border p-3 rounded-lg'
+          onChange={handleChange} 
+        />
+        <input 
+          type="password" 
+          placeholder='Пароль' 
+          id="password" 
+          className='border p-3 rounded-lg'
+          onChange={handleChange} 
+        />
+        <button disabled={loading} className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80">{loading ? 'Загрузка...': 'Обновить'}</button>
       </form>
       <div className="flex justify-between mt-5">
         <span className="text-red-700 cursor-pointer">Удалить учётную запись</span>
         <span className="text-red-700 cursor-pointer">Выйти</span>
       </div>
+
+      <p className="text-red-700 mt-5">{error ? error : ''}</p>
+      <p className="text-green-700 mt-5">{updateSuccess ? 'Пользователь успешно обновлён!' : ''}</p>
     </div>
   )
 }
