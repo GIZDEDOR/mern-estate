@@ -3,6 +3,7 @@ import { useState } from "react";
 import { app } from "../firebase";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import imageCompression from 'browser-image-compression';
 
 export default function CreateListing() {
     const {currentUser} = useSelector(state => state.user);
@@ -44,7 +45,7 @@ export default function CreateListing() {
                 setImageUploadError(false);
                 setUploading(false);
             }).catch((error) => {
-                setImageUploadError('Фото не загружено (максимум 2 мб на одно фото)');
+                setImageUploadError('Фото не загружено (максимум 10 мб на одно фото)');
                 setUploading(false);
             });
         }else{
