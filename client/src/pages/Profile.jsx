@@ -67,13 +67,11 @@ export default function Profile() {
         },
         body: JSON.stringify(formData),
       });
-
+      const data = await res.json();
       if(!res.ok) {
-        const errorData = await res.json();
         dispatch(updateUserFailure(errorData.message));
         return;
       }
-      const data = await res.json();
       dispatch(updateUserSuccess(data));
       setUpdateSuccess(true);
     } catch (error) { 
@@ -87,14 +85,11 @@ export default function Profile() {
       const res = await fetch(`/api/user/delete/${currentUser._id}`,{
         method: 'DELETE',
       });
-
+      const data = await res.json();
       if (!res.ok) {
-        const errorData = await res.json();
         dispatch(deleteUserFailure(errorData.message));
         return;
       }
-      
-      const data = await res.json();
       dispatch(deleteUserSuccess(data));
     } catch (error) {
       dispatch(deleteUserFailure(error.message));
@@ -105,12 +100,11 @@ export default function Profile() {
     try {
       dispatch(signOutUserStart());
       const res = await fetch('/api/auth/signout');
+      const data = await res.json();
       if (!res.ok) {
-        const errorData = await res.json();
         dispatch(signOutUserFailure(errorData.message));
         return;
       }
-      const data = await res.json();
       dispatch(signOutUserSuccess(data));
     } catch (error) {
       dispatch(signOutUserFailure(error.message));

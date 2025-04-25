@@ -130,13 +130,13 @@ export default function CreateListing() {
                 })
             });
 
+            const data = await res.json();
+
             if (!res.ok) {
-                const errorData = await res.json();
-                setError(errorData.message);
+                setError(data.message);
                 setLoading(false);
                 return;
             }
-            const data = await res.json();
             setLoading(false);
             navigate(`/listing/${data._id}`)
         } catch (error) {
