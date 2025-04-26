@@ -7,7 +7,6 @@ import { useDispatch } from "react-redux";
 import { Link } from 'react-router-dom';
 
 
-
 export default function Profile() {
   const fileRef = useRef(null);
   const { currentUser, loading, error } = useSelector((state) => state.user);
@@ -232,7 +231,9 @@ export default function Profile() {
               </Link>
               <div className="flex flex-col item-center">
               <button onClick={()=>handleListingDelete(listing._id)} className="text-red-700 uppercase">Удалить</button>
-              <button className="text-green-700 uppercase">Изменить</button>
+              <Link to={`/update-listing/${listing._id}`}>
+                <button className="text-green-700 uppercase">Изменить</button>
+              </Link>
               </div>
             </div>
           ))}
