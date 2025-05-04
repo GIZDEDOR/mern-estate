@@ -25,7 +25,7 @@ export default function Listingitem({listing}) {
           <div className="text-slate-700 flex gap-4">
             <div className="font-bold text-xs">
               {listing.rooms > 1 ? `${listing.rooms} 
-              комнты` : `${listing.rooms} комната`}
+              комнаты` : `${listing.rooms} комната`}
             </div>
             <div className="font-bold text-xs">
               {`${listing.bathroomType} сан-узел`}
