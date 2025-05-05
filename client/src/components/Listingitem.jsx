@@ -28,7 +28,7 @@ export default function Listingitem({listing}) {
               комнаты` : `${listing.rooms} комната`}
             </div>
             <div className="font-bold text-xs">
-              {`${listing.bathroomType} сан-узел`}
+              {`${listing.squareMeters} м²`}
             </div>
           </div>
         </div>

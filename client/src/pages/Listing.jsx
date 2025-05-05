@@ -90,7 +90,7 @@ export default function Listing() {
               {listing.offer
                 ? listing.discountPrice.toLocaleString('ru-RU')
                 : listing.regularPrice.toLocaleString('ru-RU')}
-              {listing.type === 'rent' && ' / month'}
+              {listing.type === 'rent' && ' / месяц'}
             </p>
             <p className='flex items-center mt-6 gap-2 text-slate-600 text-sm'>
               <FaMapMarkedAlt className='text-green-700'/>
