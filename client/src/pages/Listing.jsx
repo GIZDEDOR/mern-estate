@@ -11,6 +11,7 @@ import {
   FaMapMarkedAlt,
   FaParking,
   FaShare,
+  FaRulerCombined
 } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import Contact from '../components/Contact';
@@ -128,6 +129,10 @@ export default function Listing() {
             <li className='flex items-center gap-1  text-green-900 font-semibold text-sm'>
               <FaChair className='text-lg'/>
               {listing.furnished ? 'с мебелью' : 'без мебели'}
+            </li>
+            <li className='flex items-center gap-1  text-green-900 font-semibold text-sm'>
+              <FaRulerCombined className='text-lg'/>
+              {listing.squareMeters + ' м²'}
             </li>
           </ul>
           {currentUser && listing.userRef !== currentUser._id && !contact && (

@@ -93,7 +93,7 @@ export default function Home() {
                   Показать больше скидок
                 </Link>
               </div>
-              <div className='flex gap-4'>
+              <div className='flex flex-wrap gap-4'>
                 {offerListings.map((listing) => (
                   <Listingitem listing={listing} key={listing._id}/>
                 ))}
@@ -110,7 +110,7 @@ export default function Home() {
                   Показать больше аренды
                 </Link>
               </div>
-              <div className='flex gap-4'>
+              <div className='flex flex-wrap gap-4'>
                 {rentListings.map((listing) => (
                   <Listingitem listing={listing} key={listing._id}/>
                 ))}
@@ -127,7 +127,7 @@ export default function Home() {
                   Показать больше продаж
                 </Link>
               </div>
-              <div className='flex gap-4'>
+              <div className='flex flex-wrap gap-4'>
                 {saleListings.map((listing) => (
                   <Listingitem listing={listing} key={listing._id}/>
                 ))}

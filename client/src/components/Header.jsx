@@ -2,6 +2,7 @@ import {FaSearch} from 'react-icons/fa';
 import { Link, useNavigate } from "react-router-dom";
 import {useSelector} from 'react-redux';
 import { useEffect, useState } from 'react';
+import icon from '../assets/icon.png';
 
 export default function Headre() {
   const {currentUser} = useSelector(state => state.user);
@@ -28,7 +29,7 @@ export default function Headre() {
     <header className='bg-slate-200 shadow-md'>
       <div className='flex justify-between items-center max-w-6xl mx-auto p-3'>
         <Link to="/">
-        <h1 className='font-bold text-sm sm:text-xl flex flex-wrap'>
+        <h1 className='font-bold text-xl sm:text-xl flex items-center flex-wrap'>
           <span className='text-slate-500'>ta</span>
           <span className='text-slate-700'>nedvizh</span>
         </h1>
